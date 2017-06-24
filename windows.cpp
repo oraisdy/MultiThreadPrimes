@@ -24,7 +24,7 @@ bool isPrime(int n)
     return true;
 }
 
-void *concurrent(void *args)
+DWORD WINAPI concurrent(void *args)
 {
     ThreadArgs *targs = (ThreadArgs *)args;
     for (int i = 2 + targs->threadId; i <= targs->N; i += THREAD_NUM)
@@ -34,13 +34,13 @@ void *concurrent(void *args)
             targs->primes.push_back(i);
         }
     }
-    pthread_exit(0);
+    return 0;
 }
 
 int main(void)
 {
     const int N = 10000000;
-    pthread_t threads[THREAD_NUM];
+    HANDLE threads[THREAD_NUM];
     struct ThreadArgs threadArgs[THREAD_NUM];
 
     time_t begin, end;
@@ -50,19 +50,17 @@ int main(void)
     {
         threadArgs[i].N = N;
         threadArgs[i].threadId = i;
-        // pthread_create(&(threads[i]), NULL, parallel, &(threadArgs[i]));
         threads[i] = CreateThread(NULL, 0,
                                   concurrent,
                                   &(threadArgs[i]),
-                                  0, NULL)
+                                  0, NULL);
     }
 
     vector<int> primes;
 
     for (int i = 0; i < THREAD_NUM; i++)
     {
-        // pthread_join(threads[i], NULL);
-        WaitForSingleObject(thread[i],INFINITE);
+        WaitForSingleObject(threads[i],INFINITE);
         primes.insert(primes.end(), threadArgs[i].primes.begin(), threadArgs[i].primes.end());
         // cout << i << " joined" << endl;
     }
