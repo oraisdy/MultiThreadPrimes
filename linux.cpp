@@ -3,6 +3,7 @@
 #include <cmath>
 #include <string.h>
 #include <pthread.h>
+#include <time.h>
 
 using namespace std;
 
@@ -47,8 +48,8 @@ int main(void)
     pthread_t threads[THREAD_NUM];
     struct ThreadArgs threadArgs[THREAD_NUM];
 
-    clock_t begin, end;
-    begin = clock();
+    time_t begin, end;
+    time(&begin);
 
     for (int i = 0; i < THREAD_NUM; i++)
     {
@@ -62,9 +63,9 @@ int main(void)
         pthread_join(threads[i], NULL);  
         // cout << i << " joined" << endl;
     }
-    end = clock();
     cout << primes.size() << endl;
-    cout << "parallel delta time:" << end - begin << endl;
+    time(&end);
+    cout << "parallel delta time:" << difftime(end, begin) << " seconds" << endl;
     
     return 0;
 }

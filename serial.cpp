@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <cmath>
+#include <time.h>
 
 using namespace std;
 
@@ -30,12 +31,12 @@ vector<int> serial(int N)
 int main(void)
 {
     int N = 10000000;
-    clock_t begin, end;
-    begin = clock();
+    time_t begin, end;
+    time(&begin);
 
     cout <<  serial(N).size() << endl;
 
-    end = clock();
-    cout << "serial delta time:" << end - begin << endl;
+    time(&end);
+    cout << "serial delta time:" << difftime(end, begin) << " seconds" << endl;
     return 0;
 }
